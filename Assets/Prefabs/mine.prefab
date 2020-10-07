@@ -95,6 +95,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 936d3be207daa8940b9030c88c73eeb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsVisited: 0
   IsCovered: 1
   CoveredSprite: {fileID: 21300000, guid: 819f6f3372696aa48b31506ce50f31c7, type: 3}
+  FlaggedSprite: {fileID: 21300000, guid: 7d0a575237e4d3145a3b1afa6d1bd2a7, type: 3}
   TileType: 2
+  TileState: 0
