@@ -9,10 +9,13 @@ public class GameService : MonoBehaviour
     public int RowSize;
     public int ColSize;
     public int MineCount;
+    public UserInput UserInput;
     public GameObject GameOverScreen;
+    public GameObject GameWinScreen;
     public Transform ObjParent;
     public Tile[] AllPrefabs;
 
+    private int RevealTileCount;
     private List<Tile> activeMines;
     private Tile[,] Grid;
 
@@ -145,6 +148,7 @@ public class GameService : MonoBehaviour
                 else
                 {
                     tile.RevealedTile();
+                    CheckForGameWin();
                 }
             }
         }
@@ -166,10 +170,12 @@ public class GameService : MonoBehaviour
         if (tile.TileType == TileType.Clue) // check for exit condition to stop checking further(if we found the clue tile)
         {
             tile.RevealedTile();
+            CheckForGameWin();
             return;
         }
 
         tile.RevealedTile();
+        CheckForGameWin();
 
         // Checking for all possible side neighbour
         RevealAdjacentTilesUsingDFS(row, column - 1);
@@ -182,10 +188,17 @@ public class GameService : MonoBehaviour
         RevealAdjacentTilesUsingDFS(row - 1, column - 1);
     }
 
-
-    private void GameWin()
+    // Game Win implementation
+    private void CheckForGameWin()
     {
+        RevealTileCount++;
 
+        if(RevealTileCount >= RowSize * ColSize - MineCount)
+        {
+            // Game Win
+            GameWinScreen.SetActive(true);
+            UserInput.enabled = false;
+        }
     }
 
     // GameOver implementation
@@ -197,6 +210,7 @@ public class GameService : MonoBehaviour
                 activeMines[i].RevealedTile();
         }
         GameOverScreen.SetActive(true);
+        UserInput.enabled = false;
     }
 
 
@@ -210,6 +224,7 @@ public class GameService : MonoBehaviour
                 {
                     Tile tile = Grid[x, y];
                     tile.RevealedTile();
+                    CheckForGameWin();
                 }
             }
             Uncover = true;
