@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 
 public class GameService : MonoBehaviour
 {
+    [Header("Test Varibles")]
+    public bool TestGameWinForUncoverButton;
+
     [Header("User Varibles")]
-    public bool Uncover;
     public int RowSize;
     public int ColSize;
     public int MineCount;
@@ -15,6 +17,7 @@ public class GameService : MonoBehaviour
     public Transform ObjParent;
     public Tile[] AllPrefabs;
 
+    private bool isUncoverAll;
     private int RevealTileCount;
     private List<Tile> activeMines;
     private Tile[,] Grid;
@@ -75,7 +78,8 @@ public class GameService : MonoBehaviour
 
                     if (numMines > 0)
                     {
-                        Tile clueTile = Instantiate(AllPrefabs[numMines], new Vector3(x, y, 0), Quaternion.identity, ObjParent);
+                        Tile clueTile = Instantiate(AllPrefabs[numMines], new Vector3(x, y, 0), 
+                                                                Quaternion.identity, ObjParent);
                         Grid[x, y] = clueTile;
                     }
                     else
@@ -110,7 +114,8 @@ public class GameService : MonoBehaviour
     //Placing blank tiles on the board
     private void PlaceBlanks(int xIndex, int yIndex)
     {
-        Tile blankTile = Instantiate(AllPrefabs[9], new Vector3(xIndex, yIndex, 0), Quaternion.identity, ObjParent);
+        Tile blankTile = Instantiate(AllPrefabs[9], new Vector3(xIndex, yIndex, 0), 
+                                                    Quaternion.identity, ObjParent);
         Grid[xIndex, yIndex] = blankTile;
     }
 
@@ -213,10 +218,10 @@ public class GameService : MonoBehaviour
         UserInput.enabled = false;
     }
 
-
-    public void UncoverAllTileToggle()
+    // created for game testing to uncover and cover all tiles at the start for the game
+    public void UncoverAllTileToggle(TextMeshProUGUI btnText)
     {
-        if(!Uncover)
+        if(!isUncoverAll)
         {
             for (int x = 0; x < RowSize; x++)
             {
@@ -224,10 +229,13 @@ public class GameService : MonoBehaviour
                 {
                     Tile tile = Grid[x, y];
                     tile.RevealedTile();
-                    CheckForGameWin();
+
+                    if(TestGameWinForUncoverButton)
+                        CheckForGameWin();
                 }
             }
-            Uncover = true;
+            isUncoverAll = true;
+            btnText.text = "Cover";
         }
         else
         {
@@ -239,7 +247,8 @@ public class GameService : MonoBehaviour
                     tile.CoveredTile();
                 }
             }
-            Uncover = false;
+            isUncoverAll = false;
+            btnText.text = "Uncover";
         }
 
     }
